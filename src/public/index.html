@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Countdown</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>🎄 Christmas Countdown 🎄</h1>
+            <p class="tagline">Join the festive celebration!</p>
+        </header>
+
+        <!-- Registration Form -->
+        <div class="registration-card">
+            <h2>🎅 Register for the Countdown</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required placeholder="Your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth *</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" name="city" required placeholder="Your city">
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Photo (optional)</label>
+                    <input type="file" id="photo" name="photo" accept="image/*">
+                    <small>Max 5MB - JPG, PNG, GIF, or WebP</small>
+                </div>
+
+                <button type="submit" class="btn-primary">Join the Countdown! 🎁</button>
+            </form>
+        </div>
+
+        <!-- Current User Display (shown after registration) -->
+        <div id="currentUserSection" class="current-user-section" style="display: none;">
+            <h2>Your Christmas Countdown</h2>
+            <div id="currentUserCard" class="user-card current-user-card"></div>
+        </div>
+
+        <!-- Other Users List -->
+        <div class="other-users-section">
+            <h2>🎅 Other People Counting Down</h2>
+            <div id="usersList" class="users-grid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

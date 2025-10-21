@@ -1,0 +1,8 @@
+node_modules/
+.env
+db.secrets
+uploads/
+*.log
+.DS_Store
+.claude*
+db.secret
