@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: christmas2024
       POSTGRES_DB: christmas_countdown
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - christmas_postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -36,4 +36,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  christmas_postgres_data:
+    external: false
+    name: christmas_postgres_data

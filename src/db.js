@@ -115,6 +115,26 @@ const initDB = async () => {
       END $$;
     `);
 
+    // Add latitude and longitude columns if they don't exist
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name='users' AND column_name='latitude'
+        ) THEN
+          ALTER TABLE users ADD COLUMN latitude NUMERIC(10, 6);
+        END IF;
+
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name='users' AND column_name='longitude'
+        ) THEN
+          ALTER TABLE users ADD COLUMN longitude NUMERIC(10, 6);
+        END IF;
+      END $$;
+    `);
+
     console.log('Database initialized successfully');
   } catch (err) {
     console.error('Error initializing database:', err);
