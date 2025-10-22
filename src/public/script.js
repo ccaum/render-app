@@ -121,12 +121,17 @@ function createUserCard(user) {
         ? `<button class="btn-remove" onclick="removeCurrentUser()">Remove Me</button>`
         : '';
 
+    // Make city clickable if coordinates are available
+    const cityHTML = user.latitude && user.longitude
+        ? `<div class="user-city clickable" onclick='showMap(${JSON.stringify(user.city)}, ${user.latitude}, ${user.longitude})'>📍 ${escapeHtml(user.city)} 🗺️</div>`
+        : `<div class="user-city">📍 ${escapeHtml(user.city)}</div>`;
+
     return `
         <div class="user-card ${isCurrentUser ? 'current-user-card' : ''}" data-user-id="${user.id}">
             ${photoHTML}
             <div class="user-info">
                 <div class="user-name">${escapeHtml(user.name)}</div>
-                <div class="user-city">📍 ${escapeHtml(user.city)}</div>
+                ${cityHTML}
                 <div class="user-age">🎂 ${age} years old</div>
                 <div class="countdown" id="countdown-${user.id}">
                     <span class="countdown-number">-</span>
@@ -322,3 +327,78 @@ function escapeHtml(text) {
     };
     return text.replace(/[&<>"']/g, m => map[m]);
 }
+
+// Map functionality
+let map = null;
+let marker = null;
+
+function showMap(cityName, lat, lon) {
+    const modal = document.getElementById('mapModal');
+    const mapDiv = document.getElementById('map');
+    const titleElement = document.getElementById('mapModalTitle');
+
+    // Update title
+    titleElement.textContent = `${cityName} on the World Map`;
+
+    // Show modal
+    modal.style.display = 'flex';
+
+    // Small delay to ensure modal is visible before initializing map
+    setTimeout(() => {
+        // Destroy existing map if it exists
+        if (map) {
+            map.remove();
+            map = null;
+        }
+
+        // Create new map
+        map = L.map('map').setView([lat, lon], 10);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add marker
+        marker = L.marker([lat, lon]).addTo(map);
+        marker.bindPopup(`<b>${cityName}</b><br>Latitude: ${lat.toFixed(4)}<br>Longitude: ${lon.toFixed(4)}`).openPopup();
+
+        // Add a nice animation to zoom out and show the world, then zoom back in
+        setTimeout(() => {
+            map.setView([lat, lon], 2, { animate: true, duration: 1.5 });
+            setTimeout(() => {
+                map.setView([lat, lon], 10, { animate: true, duration: 1.5 });
+            }, 2000);
+        }, 500);
+    }, 100);
+}
+
+function closeMap() {
+    const modal = document.getElementById('mapModal');
+    modal.style.display = 'none';
+
+    // Destroy map when closing
+    if (map) {
+        map.remove();
+        map = null;
+    }
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('mapModal');
+    if (event.target === modal) {
+        closeMap();
+    }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('mapModal');
+        if (modal.style.display === 'flex') {
+            closeMap();
+        }
+    }
+});
